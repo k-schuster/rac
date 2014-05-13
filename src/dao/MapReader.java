@@ -29,6 +29,7 @@ public class MapReader {
         this.tokens = readFile();
 
         spawnBoard();
+        board.initAlliances();
 
     }
 

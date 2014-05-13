@@ -2,23 +2,22 @@ package logic;
 
 import dao.Road;
 import graph.Affiliation;
+import graph.Alliance;
 import graph.City;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.*;
 
 
 public class Board {
 
     private Map<Integer, City> cities;
     private Set<Road> roads;
+    public Set<Alliance> alliances;
 
     public Board() {
         this.cities = new HashMap<Integer, City>();
         this.roads = new HashSet<Road>();
+        this.alliances = new HashSet<Alliance>();
     }
 
     public int getNumberOfCities() {
@@ -27,6 +26,18 @@ public class Board {
 
     public City getCity(int id) {
         return cities.get(id);
+    }
+
+    public Collection<City> getCities() {
+        return cities.values();
+    }
+
+    public Set<City> getCities(Set<Integer> idsOfCities) {
+        Set<City> result = new HashSet<City>();
+        for (int id : idsOfCities) {
+            result.add(getCity(id));
+        }
+        return result;
     }
 
     public boolean addCity(int id, City city) {
@@ -53,10 +64,6 @@ public class Board {
         } else {
             return false;
         }
-    }
-
-    public Collection<City> getCities() {
-        return cities.values();
     }
 
     public Set<Road> getRoads() {
@@ -95,5 +102,52 @@ public class Board {
         }
         return true;
     }
+
+
+
+    private List<City> graph = new ArrayList<City>();
+
+    public void initAlliances() {
+        graph.clear();
+        for (City c : getCities()) {
+            c.visited = false;
+            graph.add(c);
+        }
+
+        for (City c : getCities()) {
+            if (!c.visited) {
+                Alliance a = new Alliance(c.getAffiliation());
+                addCitiesToAlliances(a, c);
+                alliances.add(a);
+            }
+        }
+    }
+
+    public void addCitiesToAlliances(Alliance a, City c) {
+        c.visited = true;
+        a.addMember(c);
+        for (City neighbor : c.getNeighbors()) {
+            if (neighbor.getAffiliation() == c.getAffiliation()) {
+                if (!neighbor.visited) {
+                    addCitiesToAlliances(a, neighbor);
+                }
+            }
+        }
+    }
+
+    public int getPoints(Affiliation affiliation) {
+        int result = 0;
+        for (Alliance a : alliances) {
+            if (a.getAffiliation() == affiliation) {
+                result += a.size();
+            } else if (a.getAffiliation() == Affiliation.N) {
+                if (checkForSameAffiliation(getNeighbors(a.getMembers()), affiliation)) {
+                    result += a.size();
+                }
+            }
+        }
+        return result;
+    }
+
 
 }

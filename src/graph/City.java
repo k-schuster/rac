@@ -9,6 +9,7 @@ public class City {
     private final int id;
     private Affiliation affiliation;
 
+    public boolean visited = false;
     private Alliance alliance;
 
     private final int x, y;

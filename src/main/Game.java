@@ -1,12 +1,16 @@
 package main;
 
 import dao.MapReader;
-import dao.Road;
+import graph.Affiliation;
+import graph.Alliance;
 import graph.City;
 import gui.GraphVisualization;
 import logic.Board;
+import logic.GraphAlgorithms;
 
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Game {
 
@@ -33,6 +37,20 @@ public class Game {
         for (City c : board.getCities()) {
             System.out.println(c);
         }
+
+        System.out.println();
+        // board.initAlliances();
+
+        for (Alliance a : board.alliances) {
+            for (City c : a.getMembers()) {
+                System.out.println(c);
+            }
+            System.out.println();
+        }
+
+        System.out.println();
+        System.out.println("Rome: " + board.getPoints(Affiliation.R));
+        System.out.println("Carthage: " + board.getPoints(Affiliation.C));
 
 
         GraphVisualization graph = new GraphVisualization(board);
