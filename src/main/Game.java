@@ -6,11 +6,8 @@ import graph.Alliance;
 import graph.City;
 import gui.GraphVisualization;
 import logic.Board;
-import logic.GraphAlgorithms;
 
-import java.util.HashSet;
 import java.util.Scanner;
-import java.util.Set;
 
 public class Game {
 

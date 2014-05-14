@@ -2,6 +2,7 @@ package gui;
 
 import dao.Road;
 import logic.Board;
+import logic.logicexceptions.NoSuchCityException;
 
 import java.awt.Dimension;
 import java.awt.Container;
@@ -32,8 +33,8 @@ public class GraphVisualization {
         for (Road r : board.getRoads()) {
             roads.addLine(r.c1.getX(),
                     r.c1.getY(),
-                    r.c2.getX()
-                    ,                          r.c2.getY());
+                    r.c2.getX(),
+                    r.c2.getY());
         }
 
         // this controls the window size
@@ -44,7 +45,7 @@ public class GraphVisualization {
 
 
     // this method should probably be split into two
-    private void setUpButtons() {
+    private void setUpButtons() throws NoSuchCityException {
         for (int i = 0; i < cities.length; i++) {
             cities[i].setText(board.getCity(i).getId() + " " +
                     board.getCity(i).getAffiliation().name());
@@ -60,7 +61,12 @@ public class GraphVisualization {
         pane.setLayout(null);
 
         //add text and bounds to buttons
-        setUpButtons();
+        try {
+            setUpButtons();
+        } catch (NoSuchCityException e) {
+            e.printStackTrace();
+        }
+
         //add them to the frame one by one
         for (int i = 0; i < cities.length; i++) {
             pane.add(cities[i]);
